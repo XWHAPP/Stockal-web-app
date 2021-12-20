@@ -1,13 +1,13 @@
 import * as React from 'react';
+import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
 interface Props {
-
 }
 
 interface State {
-  searchTerm: String | null
+  searchTerm: String | null,
 }
 
 class SearchBar extends React.Component<Props, State> {
@@ -19,17 +19,18 @@ class SearchBar extends React.Component<Props, State> {
   }
   
   onSearchValueChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
-    // console.log(event.currentTarget);
     console.log("Searched term = " + value);
     
     this.setState({ searchTerm: value });
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    console.log("prevProps:" + JSON.stringify(prevProps));
-    console.log("prevState:" + JSON.stringify(prevState));
+  componentDidUpdate() {
     console.log("Props:" + JSON.stringify(this.props));
     console.log("State:" + JSON.stringify(this.state));
+
+    axios.get(`http://stockal.mocklab.io/v1/senti`, {
+      params: {stock: this.state.searchTerm},
+    });
   }
 
   render() {
@@ -50,10 +51,10 @@ class SearchBar extends React.Component<Props, State> {
 
 // TODO: True autocomplete data retrieval
 const autoCompleteOptions = [
-  { title: 'Bitcoin', year: 1994 },
-  { title: 'Ethereum', year: 1972 },
-  { title: 'Polygon', year: 1974 },
-  { title: 'Shiba', year: 2008 },
+  { title: 'Bitcoin', year: 1994 }, // Largely negative stock
+  { title: 'Ethereum', year: 1972 }, // Largely neutral stock
+  { title: 'Polygon', year: 1974 }, // Largely positive stock
+  { title: 'Shiba', year: 2008 }, // 404 not found
   { title: 'Dogecoin', year: 1957 },
 ];
 
