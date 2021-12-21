@@ -8,29 +8,48 @@ interface Props {
 
 interface State {
   searchTerm: String | null,
+  // TODO: tell Dashboard that it needs to display loading screen or not (tru props?)
+  isLoading: boolean,
 }
 
 class SearchBar extends React.Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { searchTerm: null };
+    this.state = { searchTerm: null, isLoading: false};
     this.onSearchValueChange = this.onSearchValueChange.bind(this);
   }
   
   onSearchValueChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
     console.log("Searched term = " + value);
-    
-    this.setState({ searchTerm: value });
+    this.setState({ searchTerm: value, isLoading: true });
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     console.log("Props:" + JSON.stringify(this.props));
     console.log("State:" + JSON.stringify(this.state));
 
-    axios.get(`http://stockal.mocklab.io/v1/senti`, {
-      params: {stock: this.state.searchTerm},
-    });
+    if (this.state.isLoading){
+      // TODO: Tell ownself OR others to load loading screen
+    } else {
+      // TODO: Tell ownself OR others to unload loading screen
+    }
+
+    if (prevState.searchTerm !== this.state.searchTerm){
+      axios.post(`http://stockal.mocklab.io/v1/Sentiment`, {
+        stock: this.state.searchTerm,
+      })
+      .then((response)=> {
+        // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
+        this.setState({ isLoading: false });
+        console.log(response);
+      })
+      .catch(function (error) {
+        // TODO: tear down loading screen, and pass error to Dashboard to display error with
+        console.error(error);
+      });
+  
+    }
   }
 
   render() {
