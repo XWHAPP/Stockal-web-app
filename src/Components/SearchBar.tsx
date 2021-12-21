@@ -49,7 +49,7 @@ class SearchBar extends React.Component<Props, State> {
   }
 }
 
-// TODO: True autocomplete data retrieval
+// TODO: True autocomplete data retrieval. See Github issue 1
 const autoCompleteOptions = [
   { title: 'Bitcoin', year: 1994 }, // Largely negative stock
   { title: 'Ethereum', year: 1972 }, // Largely neutral stock
