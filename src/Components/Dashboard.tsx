@@ -110,7 +110,7 @@ function DashboardContent() {
             >
               Stockal
             </Typography>
-            <SearchBar/>
+            <SearchBar />
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

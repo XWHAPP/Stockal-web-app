@@ -36,18 +36,11 @@ export default function Chart() {
             left: 24,
           }}
         >
-          <XAxis
-            dataKey="time"
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          />
-          <YAxis
-            stroke={theme.palette.text.secondary}
-            style={theme.typography.body2}
-          >
+          <XAxis dataKey='time' stroke={theme.palette.text.secondary} style={theme.typography.body2} />
+          <YAxis stroke={theme.palette.text.secondary} style={theme.typography.body2}>
             <Label
               angle={270}
-              position="left"
+              position='left'
               style={{
                 textAnchor: 'middle',
                 fill: theme.palette.text.primary,
@@ -59,8 +52,8 @@ export default function Chart() {
           </YAxis>
           <Line
             isAnimationActive={false}
-            type="monotone"
-            dataKey="amount"
+            type='monotone'
+            dataKey='amount'
             stroke={theme.palette.primary.main}
             dot={false}
           />
