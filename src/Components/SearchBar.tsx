@@ -34,10 +34,15 @@ class SearchBar extends React.Component<Props, State> {
     }
 
     if (prevState.searchTerm !== this.state.searchTerm) {
+      // TODO: Set fixed domain
+      // TODO: Switch env to allow mock and actual APIs
       axios
-        .post(`http://stockal.mocklab.io/v1/Sentiment`, {
-          stock: this.state.searchTerm,
-        })
+        .post(
+          `http://stockalsentimentanalysisinstance2-env.eba-jxqpuuwu.ap-southeast-1.elasticbeanstalk.com/Sentiment`,
+          {
+            stock: this.state.searchTerm,
+          },
+        )
         .then((response) => {
           // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
           this.setState({ isLoading: false });
@@ -47,6 +52,19 @@ class SearchBar extends React.Component<Props, State> {
           // TODO: tear down loading screen, and pass error to Dashboard to display error with
           console.error(error);
         });
+      // axios
+      //   .post(`http://stockal.mocklab.io/v1/Sentiment`, {
+      //     stock: this.state.searchTerm,
+      //   })
+      //   .then((response) => {
+      //     // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
+      //     this.setState({ isLoading: false });
+      //     console.log(response);
+      //   })
+      //   .catch(function (error) {
+      //     // TODO: tear down loading screen, and pass error to Dashboard to display error with
+      //     console.error(error);
+      //   });
     }
   }
 
