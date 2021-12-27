@@ -15,10 +15,10 @@ class SearchBar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { searchTerm: null, isLoading: false };
-    this.onSearchValueChange = this.onSearchValueChange.bind(this);
+    this.onAutocompleteChange = this.onAutocompleteChange.bind(this);
   }
 
-  onSearchValueChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
+  onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
     console.log('Searched term = ' + value);
     this.setState({ searchTerm: value, isLoading: true });
   };
@@ -35,8 +35,10 @@ class SearchBar extends React.Component<Props, State> {
 
     if (prevState.searchTerm !== this.state.searchTerm) {
       axios
-        .post(`http://stockal.mocklab.io/v1/Sentiment`, {
-          stock: this.state.searchTerm,
+        .get(`http://stockal.mocklab.io/v1/Sentiment`, {
+          params: {
+            stock: this.state.searchTerm,
+          },
         })
         .then((response) => {
           // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
@@ -60,7 +62,7 @@ class SearchBar extends React.Component<Props, State> {
         size='small'
         options={autoCompleteOptions.map((option) => option.title)}
         renderInput={(params) => <TextField {...params} label='Search stocks' />}
-        onChange={this.onSearchValueChange}
+        onChange={this.onAutocompleteChange}
       />
     );
   }
