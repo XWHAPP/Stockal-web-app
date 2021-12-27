@@ -35,7 +35,7 @@ class SearchBar extends React.Component<Props, State> {
 
     if (prevState.searchTerm !== this.state.searchTerm) {
       axios
-        .get(`http://stockal.mocklab.io/v1/Sentiment`, {
+        .get(`/Sentiment`, {
           params: {
             stock: this.state.searchTerm,
           },
@@ -44,10 +44,12 @@ class SearchBar extends React.Component<Props, State> {
           // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
           this.setState({ isLoading: false });
           console.log(response);
+          alert(response);
         })
         .catch(function (error) {
           // TODO: tear down loading screen, and pass error to Dashboard to display error with
           console.error(error);
+          alert(error);
         });
     }
   }
