@@ -15,10 +15,10 @@ class SearchBar extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { searchTerm: null, isLoading: false };
-    this.onSearchValueChange = this.onSearchValueChange.bind(this);
+    this.onAutocompleteChange = this.onAutocompleteChange.bind(this);
   }
 
-  onSearchValueChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
+  onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
     console.log('Searched term = ' + value);
     this.setState({ searchTerm: value, isLoading: true });
   };
@@ -37,20 +37,21 @@ class SearchBar extends React.Component<Props, State> {
       // TODO: Set fixed domain
       // TODO: Switch env to allow mock and actual APIs
       axios
-        .post(
-          `http://stockalsentimentanalysisinstance2-env.eba-jxqpuuwu.ap-southeast-1.elasticbeanstalk.com/Sentiment`,
-          {
+        .get(`/Sentiment`, {
+          params: {
             stock: this.state.searchTerm,
           },
-        )
+        })
         .then((response) => {
           // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
           this.setState({ isLoading: false });
           console.log(response);
+          alert(response);
         })
         .catch(function (error) {
           // TODO: tear down loading screen, and pass error to Dashboard to display error with
           console.error(error);
+          alert(error);
         });
       // axios
       //   .post(`http://stockal.mocklab.io/v1/Sentiment`, {
@@ -78,7 +79,7 @@ class SearchBar extends React.Component<Props, State> {
         size='small'
         options={autoCompleteOptions.map((option) => option.title)}
         renderInput={(params) => <TextField {...params} label='Search stocks' />}
-        onChange={this.onSearchValueChange}
+        onChange={this.onAutocompleteChange}
       />
     );
   }
