@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 import { configureAxios } from './Utils/apiUtil';
 
 // TODO: Make boolean configurable through .env
-export const isMock = false;
+export const isMock = true;
 configureAxios(isMock);
 
 ReactDOM.render(
