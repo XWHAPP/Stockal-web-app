@@ -8,13 +8,20 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchBar from '../Components/SearchBar';
 import axios from 'axios';
+import { ClipLoader } from 'react-spinners';
+import { css } from '@emotion/react';
 
 interface Props {}
 interface State {
   searchTerm: string | null;
-  // TODO: tell Dashboard that it needs to display loading screen or not (tru props?)
   isLoading: boolean;
 }
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 class Landing extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -31,9 +38,7 @@ class Landing extends React.Component<Props, State> {
     console.log('State on Landing:' + JSON.stringify(this.state));
 
     if (this.state.isLoading) {
-      // TODO: Tell ownself OR others to load loading screen
     } else {
-      // TODO: Tell ownself OR others to unload loading screen
     }
 
     if (prevState.searchTerm !== this.state.searchTerm) {
@@ -44,15 +49,15 @@ class Landing extends React.Component<Props, State> {
           },
         })
         .then((response) => {
-          // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
-          this.setState({ isLoading: false });
           console.log(response);
-          alert(JSON.stringify(response.data));
+          alert('success: ' + JSON.stringify(response.data));
         })
-        .catch(function (error) {
-          // TODO: tear down loading screen, and pass error to Dashboard to display error with
+        .catch((error) => {
           console.error(error);
-          alert(JSON.stringify(error));
+          alert('fail: ' + JSON.stringify(error));
+        })
+        .finally(() => {
+          this.setState({ isLoading: false });
         });
     }
   }
@@ -60,6 +65,11 @@ class Landing extends React.Component<Props, State> {
   render() {
     return (
       <div>
+        {/* Loading overlay */}
+        <div className='sweet-loading'>
+          <ClipLoader css={override} size={100} color={'#123abc'} loading={this.state.isLoading} speedMultiplier={1} />
+        </div>
+        {/* //// */}
         {/* Header */}
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position='sticky'>
