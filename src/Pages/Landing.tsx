@@ -7,14 +7,16 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchBar from '../Components/SearchBar';
-import axios from 'axios';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
+import { PublicSentiment } from '../Models/PublicSentiment';
 
 interface Props {}
 interface State {
   searchTerm: string | null;
   isLoading: boolean;
+  stockSentiment?: PublicSentiment;
 }
 
 class Landing extends React.Component<Props, State> {
@@ -40,11 +42,13 @@ class Landing extends React.Component<Props, State> {
         })
         .then((response) => {
           console.log(response);
-          alert('success: ' + JSON.stringify(response.data));
+          const searchResult: PublicSentiment = { ...response.data };
+          this.setState({ stockSentiment: searchResult });
         })
         .catch((error) => {
           console.error(error);
           alert('fail: ' + JSON.stringify(error));
+          this.setState({ stockSentiment: undefined });
         })
         .finally(() => {
           this.setState({ isLoading: false });
@@ -79,7 +83,18 @@ class Landing extends React.Component<Props, State> {
         {/* //// */}
 
         {/* Body */}
-
+        <Box
+          sx={{
+            flexGrow: 1,
+            backgroundColor: 'primary.dark',
+          }}
+        >
+          {/* TODO: Beautify this */}
+          <h2>{this.state.searchTerm}</h2>
+          <p>Postivity: {this.state.stockSentiment?.positivity}</p>
+          <p>Neutrality: {this.state.stockSentiment?.neutrality}</p>
+          <p>Negativity: {this.state.stockSentiment?.negativity}</p>
+        </Box>
         {/* //// */}
       </div>
     );
