@@ -6,12 +6,13 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
+import SearchBar from './SearchBar';
 
 interface Props {}
 
 interface State {}
 
-class HeaderBar extends React.Component<Props, State> {
+class Header extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {};
@@ -25,14 +26,15 @@ class HeaderBar extends React.Component<Props, State> {
   render() {
     return (
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position='static'>
+        <AppBar position='sticky'>
           <Toolbar>
             <IconButton size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
               <MenuIcon />
             </IconButton>
-            <Typography variant='h6' component='div' sx={{ flexGrow: 1 }}>
-              News
+            <Typography variant='h4' component='div' sx={{ flexGrow: 1, mr: 2 }}>
+              Stockal
             </Typography>
+            <SearchBar></SearchBar>
             <Button color='inherit'>Login</Button>
           </Toolbar>
         </AppBar>
@@ -41,4 +43,4 @@ class HeaderBar extends React.Component<Props, State> {
   }
 }
 
-export default HeaderBar;
+export default Header;

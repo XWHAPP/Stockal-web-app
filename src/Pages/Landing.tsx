@@ -1,5 +1,5 @@
 import * as React from 'react';
-import HeaderBar from '../Components/HeaderBar';
+import Header from '../Components/Header';
 
 interface Props {}
 
@@ -19,7 +19,7 @@ class Landing extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        <HeaderBar />
+        <Header />
       </div>
     );
   }
