@@ -1,5 +1,5 @@
-import { Button } from '@mui/material';
 import * as React from 'react';
+import HeaderBar from '../Components/HeaderBar';
 
 interface Props {}
 
@@ -8,7 +8,7 @@ interface State {}
 class Landing extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { searchTerm: null, isLoading: false };
+    this.state = {};
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -17,7 +17,11 @@ class Landing extends React.Component<Props, State> {
   }
 
   render() {
-    return <Button variant='contained'>Hello World</Button>;
+    return (
+      <div>
+        <HeaderBar />
+      </div>
+    );
   }
 }
 
