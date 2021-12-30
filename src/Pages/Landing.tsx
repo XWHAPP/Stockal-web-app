@@ -10,13 +10,15 @@ import SearchBar from '../Components/SearchBar';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
-import { PublicSentiment } from '../Models/PublicSentiment';
+import { Sentiment } from '../Models/Sentiment';
+import { VictoryLabel, VictoryPie } from 'victory';
+import { Paper } from '@mui/material';
 
 interface Props {}
 interface State {
   searchTerm: string | null;
   isLoading: boolean;
-  stockSentiment?: PublicSentiment;
+  stockSentiment?: Sentiment;
 }
 
 class Landing extends React.Component<Props, State> {
@@ -42,11 +44,12 @@ class Landing extends React.Component<Props, State> {
         })
         .then((response) => {
           console.log(response);
-          const searchResult: PublicSentiment = { ...response.data };
+          const searchResult: Sentiment = { ...response.data };
           this.setState({ stockSentiment: searchResult });
         })
         .catch((error) => {
           console.error(error);
+          // TODO: Error-handling with MUI Alert component
           alert('fail: ' + JSON.stringify(error));
           this.setState({ stockSentiment: undefined });
         })
@@ -54,6 +57,27 @@ class Landing extends React.Component<Props, State> {
           this.setState({ isLoading: false });
         });
     }
+  }
+
+  renderSentiment() {
+    if (this.state.stockSentiment) {
+      return (
+        <div>
+          <VictoryPie
+            // TODO: Add localisation and store texts in en.json
+            data={[
+              { x: 'Positivity', y: this.state.stockSentiment?.positivity },
+              { x: 'Neutrality', y: this.state.stockSentiment?.neutrality },
+              { x: 'Negativity', y: this.state.stockSentiment?.negativity },
+            ]}
+            labels={({ datum }) => `${datum.x}: ${Math.round((datum.y + Number.EPSILON) * 1000) / 1000}`}
+            colorScale={['#47B39C', '#FFC154', '#EC6B56']}
+            height={200}
+            labelComponent={<VictoryLabel style={[{ fontSize: 6 }]} textAnchor={'middle'} />}
+          />
+        </div>
+      );
+    } else return <></>;
   }
 
   render() {
@@ -86,14 +110,22 @@ class Landing extends React.Component<Props, State> {
         <Box
           sx={{
             flexGrow: 1,
-            backgroundColor: 'primary.dark',
           }}
         >
           {/* TODO: Beautify this */}
           <h2>{this.state.searchTerm}</h2>
-          <p>Postivity: {this.state.stockSentiment?.positivity}</p>
-          <p>Neutrality: {this.state.stockSentiment?.neutrality}</p>
-          <p>Negativity: {this.state.stockSentiment?.negativity}</p>
+          <Box sx={{ flexGrow: 1 }}>
+            <Paper elevation={1}>
+              <p>Positivity: {this.state.stockSentiment?.positivity}</p>
+            </Paper>
+            <Paper elevation={1}>
+              <p>Neutrality: {this.state.stockSentiment?.neutrality}</p>
+            </Paper>
+            <Paper elevation={1}>
+              <p>Negativity: {this.state.stockSentiment?.negativity}</p>
+            </Paper>
+          </Box>
+          {this.renderSentiment()}
         </Box>
         {/* //// */}
       </div>
