@@ -115,7 +115,6 @@ function DashboardContent() {
               <Typography component='h1' variant='h4' color='inherit' noWrap sx={{ width: 300 }}>
                 Stockal
               </Typography>
-              <SearchBar />
             </Toolbar>
           </AppBar>
           <Drawer variant='permanent' open={open}>
