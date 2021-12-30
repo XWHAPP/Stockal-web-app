@@ -9,10 +9,6 @@ interface Props {
 interface State {}
 
 class SearchBar extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-  }
-
   onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: string | null) => {
     console.log('Searched term = ' + value);
     this.props.sendSearchTerm(value);

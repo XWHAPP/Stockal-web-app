@@ -19,7 +19,6 @@ import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import Copyright from './Copyright';
-import SearchBar from './SearchBar';
 import { ClipLoader } from 'react-spinners';
 
 const drawerWidth: number = 240;
