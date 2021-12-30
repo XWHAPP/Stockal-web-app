@@ -65,6 +65,7 @@ class SearchBar extends React.Component<Props, State> {
         options={autoCompleteOptions.map((option) => option.title)}
         renderInput={(params) => <TextField {...params} label='Search stocks' />}
         onChange={this.onAutocompleteChange}
+        sx={{ mr: 2 }}
       />
     );
   }
