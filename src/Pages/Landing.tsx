@@ -8,20 +8,14 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchBar from '../Components/SearchBar';
 import axios from 'axios';
-import { ClipLoader } from 'react-spinners';
-import { css } from '@emotion/react';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface Props {}
 interface State {
   searchTerm: string | null;
   isLoading: boolean;
 }
-
-const override = css`
-  display: block;
-  margin: 0 auto;
-  border-color: red;
-`;
 
 class Landing extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -36,10 +30,6 @@ class Landing extends React.Component<Props, State> {
   componentDidUpdate(prevProps: Props, prevState: State) {
     console.log('Props on Landing:' + JSON.stringify(this.props));
     console.log('State on Landing:' + JSON.stringify(this.state));
-
-    if (this.state.isLoading) {
-    } else {
-    }
 
     if (prevState.searchTerm !== this.state.searchTerm) {
       axios
@@ -65,11 +55,12 @@ class Landing extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        {/* Loading overlay */}
-        <div className='sweet-loading'>
-          <ClipLoader css={override} size={100} color={'#123abc'} loading={this.state.isLoading} speedMultiplier={1} />
-        </div>
+        {/* Loader backdrop */}
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={this.state.isLoading}>
+          <CircularProgress color='inherit' size={100} thickness={5} />
+        </Backdrop>
         {/* //// */}
+
         {/* Header */}
         <Box sx={{ flexGrow: 1 }}>
           <AppBar position='sticky'>
@@ -85,6 +76,10 @@ class Landing extends React.Component<Props, State> {
             </Toolbar>
           </AppBar>
         </Box>
+        {/* //// */}
+
+        {/* Body */}
+
         {/* //// */}
       </div>
     );

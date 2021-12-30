@@ -9,6 +9,10 @@ interface Props {
 interface State {}
 
 class SearchBar extends React.Component<Props, State> {
+  handleOpen = (isOpen: boolean) => {
+    this.setState({ open: isOpen });
+  };
+
   onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: string | null) => {
     console.log('Searched term = ' + value);
     this.props.sendSearchTerm(value);
@@ -26,6 +30,9 @@ class SearchBar extends React.Component<Props, State> {
         renderInput={(params) => <TextField {...params} label='Search stocks' />}
         onChange={this.onAutocompleteChange}
         sx={{ mr: 2 }}
+        selectOnFocus={true}
+        blurOnSelect={true}
+        clearOnBlur={true}
       />
     );
   }
