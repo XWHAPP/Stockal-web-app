@@ -19,7 +19,6 @@ import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import Copyright from './Copyright';
-import SearchBar from './SearchBar';
 import { ClipLoader } from 'react-spinners';
 
 const drawerWidth: number = 240;
@@ -115,7 +114,6 @@ function DashboardContent() {
               <Typography component='h1' variant='h4' color='inherit' noWrap sx={{ width: 300 }}>
                 Stockal
               </Typography>
-              <SearchBar />
             </Toolbar>
           </AppBar>
           <Drawer variant='permanent' open={open}>
