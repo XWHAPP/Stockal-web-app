@@ -12,7 +12,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import { Sentiment } from '../Models/Sentiment';
 import { VictoryLabel, VictoryPie } from 'victory';
-import { Paper } from '@mui/material';
+import Card from './Card';
+import '../css/Card.css';
+import '../css/Dashboard.css';
 
 interface Props {}
 interface State {
@@ -63,6 +65,12 @@ class Dashboard extends React.Component<Props, State> {
     if (this.state.stockSentiment) {
       return (
         <div>
+          <h2>{this.state.searchTerm}</h2>
+          <div className='content'>
+            <Card iconText='+' title='Positivity' subText={this.state.stockSentiment?.positivity.toString()} />
+            <Card iconText='~' title='Neutrality' subText={this.state.stockSentiment?.neutrality.toString()} />
+            <Card iconText='-' title='Negativity' subText={this.state.stockSentiment?.negativity.toString()} />
+          </div>
           <VictoryPie
             // TODO: Add localisation and store texts in en.json
             data={[
@@ -70,10 +78,10 @@ class Dashboard extends React.Component<Props, State> {
               { x: 'Neutrality', y: this.state.stockSentiment?.neutrality },
               { x: 'Negativity', y: this.state.stockSentiment?.negativity },
             ]}
-            labels={({ datum }) => `${datum.x}: ${Math.round((datum.y + Number.EPSILON) * 1000) / 1000}`}
+            labels={({ datum }) => datum.x}
             colorScale={['#47B39C', '#FFC154', '#EC6B56']}
-            height={200}
-            labelComponent={<VictoryLabel style={[{ fontSize: 6 }]} textAnchor={'middle'} />}
+            height={250}
+            labelComponent={<VictoryLabel style={[{ fontSize: 8 }]} textAnchor={'middle'} />}
           />
         </div>
       );
@@ -107,26 +115,7 @@ class Dashboard extends React.Component<Props, State> {
         {/* //// */}
 
         {/* Body */}
-        <Box
-          sx={{
-            flexGrow: 1,
-          }}
-        >
-          {/* TODO: Beautify this */}
-          <h2>{this.state.searchTerm}</h2>
-          <Box sx={{ flexGrow: 1 }}>
-            <Paper elevation={1}>
-              <p>Positivity: {this.state.stockSentiment?.positivity}</p>
-            </Paper>
-            <Paper elevation={1}>
-              <p>Neutrality: {this.state.stockSentiment?.neutrality}</p>
-            </Paper>
-            <Paper elevation={1}>
-              <p>Negativity: {this.state.stockSentiment?.negativity}</p>
-            </Paper>
-          </Box>
-          {this.renderSentiment()}
-        </Box>
+        <Box sx={{ padding: '0 40px' }}>{this.renderSentiment()}</Box>
         {/* //// */}
       </div>
     );
