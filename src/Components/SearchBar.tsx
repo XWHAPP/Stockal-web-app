@@ -1,73 +1,22 @@
 import * as React from 'react';
-import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 
-interface Props {}
-
-interface State {
-  searchTerm: String | null;
-  // TODO: tell Dashboard that it needs to display loading screen or not (tru props?)
-  isLoading: boolean;
+interface Props {
+  sendSearchTerm(value: string | null): void;
 }
 
-class SearchBar extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { searchTerm: null, isLoading: false };
-    this.onAutocompleteChange = this.onAutocompleteChange.bind(this);
-  }
+interface State {}
 
-  onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: String | null) => {
-    console.log('Searched term = ' + value);
-    this.setState({ searchTerm: value, isLoading: true });
+class SearchBar extends React.Component<Props, State> {
+  handleOpen = (isOpen: boolean) => {
+    this.setState({ open: isOpen });
   };
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    console.log('Props:' + JSON.stringify(this.props));
-    console.log('State:' + JSON.stringify(this.state));
-
-    if (this.state.isLoading) {
-      // TODO: Tell ownself OR others to load loading screen
-    } else {
-      // TODO: Tell ownself OR others to unload loading screen
-    }
-
-    if (prevState.searchTerm !== this.state.searchTerm) {
-      // TODO: Set fixed domain
-      // TODO: Switch env to allow mock and actual APIs
-      axios
-        .get(`/Sentiment`, {
-          params: {
-            stock: this.state.searchTerm,
-          },
-        })
-        .then((response) => {
-          // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
-          this.setState({ isLoading: false });
-          console.log(response);
-          alert(response);
-        })
-        .catch(function (error) {
-          // TODO: tear down loading screen, and pass error to Dashboard to display error with
-          console.error(error);
-          alert(error);
-        });
-      // axios
-      //   .post(`http://stockal.mocklab.io/v1/Sentiment`, {
-      //     stock: this.state.searchTerm,
-      //   })
-      //   .then((response) => {
-      //     // TODO: tear down loading screen, and pass response to Dashboard to display shitz with
-      //     this.setState({ isLoading: false });
-      //     console.log(response);
-      //   })
-      //   .catch(function (error) {
-      //     // TODO: tear down loading screen, and pass error to Dashboard to display error with
-      //     console.error(error);
-      //   });
-    }
-  }
+  onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: string | null) => {
+    console.log('Searched term = ' + value);
+    this.props.sendSearchTerm(value);
+  };
 
   render() {
     return (
@@ -80,6 +29,10 @@ class SearchBar extends React.Component<Props, State> {
         options={autoCompleteOptions.map((option) => option.title)}
         renderInput={(params) => <TextField {...params} label='Search stocks' />}
         onChange={this.onAutocompleteChange}
+        sx={{ mr: 2 }}
+        selectOnFocus={true}
+        blurOnSelect={true}
+        clearOnBlur={true}
       />
     );
   }
