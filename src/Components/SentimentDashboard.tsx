@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import SearchBar from '../Components/SearchBar';
+import SearchBar from './SearchBar';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
@@ -21,7 +21,7 @@ interface State {
   stockSentiment?: Sentiment;
 }
 
-class Landing extends React.Component<Props, State> {
+class SentimentDashboard extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { searchTerm: null, isLoading: false };
@@ -32,8 +32,8 @@ class Landing extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    console.log('Props on Landing:' + JSON.stringify(this.props));
-    console.log('State on Landing:' + JSON.stringify(this.state));
+    console.log('Props on SentimentDashboard:' + JSON.stringify(this.props));
+    console.log('State on SentimentDashboard:' + JSON.stringify(this.state));
 
     if (prevState.searchTerm !== this.state.searchTerm) {
       axios
@@ -133,4 +133,4 @@ class Landing extends React.Component<Props, State> {
   }
 }
 
-export default Landing;
+export default SentimentDashboard;
