@@ -60,11 +60,7 @@ class Dashboard extends React.Component<Props, State> {
     }
   }
 
-  renderLoader() {
-    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={this.state.isLoading}>
-      <CircularProgress color='inherit' size={100} thickness={5} />
-    </Backdrop>;
-  }
+  renderLoader() {}
   renderHeader() {
     return (
       <Box sx={{ flexGrow: 1 }}>
@@ -91,8 +87,14 @@ class Dashboard extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        {this.renderLoader()}
+        {/* Loader backdrop */}
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={this.state.isLoading}>
+          <CircularProgress color='inherit' size={100} thickness={5} />
+        </Backdrop>
+        {/* //// */}
+
         {this.renderHeader()}
+
         {this.renderResults()}
       </div>
     );
