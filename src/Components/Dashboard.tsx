@@ -11,10 +11,9 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
 import { Sentiment } from '../Models/Sentiment';
-import { VictoryLabel, VictoryPie } from 'victory';
-import Card from './Card';
 import '../css/Card.css';
 import '../css/Dashboard.css';
+import Results from './Results';
 
 interface Props {}
 interface State {
@@ -61,62 +60,40 @@ class Dashboard extends React.Component<Props, State> {
     }
   }
 
-  renderSentiment() {
-    if (this.state.stockSentiment) {
-      return (
-        <div>
-          <h2>{this.state.searchTerm}</h2>
-          <div className='content'>
-            <Card iconText='+' title='Positivity' subText={this.state.stockSentiment?.positivity.toString()} />
-            <Card iconText='~' title='Neutrality' subText={this.state.stockSentiment?.neutrality.toString()} />
-            <Card iconText='-' title='Negativity' subText={this.state.stockSentiment?.negativity.toString()} />
-          </div>
-          <VictoryPie
-            // TODO: Add localisation and store texts in en.json
-            data={[
-              { x: 'Positivity', y: this.state.stockSentiment?.positivity },
-              { x: 'Neutrality', y: this.state.stockSentiment?.neutrality },
-              { x: 'Negativity', y: this.state.stockSentiment?.negativity },
-            ]}
-            labels={({ datum }) => datum.x}
-            colorScale={['#47B39C', '#FFC154', '#EC6B56']}
-            height={250}
-            labelComponent={<VictoryLabel style={[{ fontSize: 8 }]} textAnchor={'middle'} />}
-          />
-        </div>
-      );
-    } else return <></>;
+  renderLoader() {
+    <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={this.state.isLoading}>
+      <CircularProgress color='inherit' size={100} thickness={5} />
+    </Backdrop>;
+  }
+  renderHeader() {
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position='sticky'>
+          <Toolbar>
+            <IconButton size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant='h4' component='div' sx={{ flexGrow: 1, mr: 2 }}>
+              Stockal
+            </Typography>
+            <SearchBar sendSearchTerm={this.getSearchTerm}></SearchBar>
+            <Button color='inherit'>Login</Button>
+          </Toolbar>
+        </AppBar>
+      </Box>
+    );
+  }
+
+  renderResults() {
+    return <Results searchTerm={this.state.searchTerm} stockSentiment={this.state.stockSentiment}></Results>;
   }
 
   render() {
     return (
       <div>
-        {/* Loader backdrop */}
-        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={this.state.isLoading}>
-          <CircularProgress color='inherit' size={100} thickness={5} />
-        </Backdrop>
-        {/* //// */}
-
-        {/* Header */}
-        <Box sx={{ flexGrow: 1 }}>
-          <AppBar position='sticky'>
-            <Toolbar>
-              <IconButton size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
-                <MenuIcon />
-              </IconButton>
-              <Typography variant='h4' component='div' sx={{ flexGrow: 1, mr: 2 }}>
-                Stockal
-              </Typography>
-              <SearchBar sendSearchTerm={this.getSearchTerm}></SearchBar>
-              <Button color='inherit'>Login</Button>
-            </Toolbar>
-          </AppBar>
-        </Box>
-        {/* //// */}
-
-        {/* Body */}
-        <Box sx={{ padding: '0 40px' }}>{this.renderSentiment()}</Box>
-        {/* //// */}
+        {this.renderLoader()}
+        {this.renderHeader()}
+        {this.renderResults()}
       </div>
     );
   }
