@@ -1,185 +1,104 @@
 import * as React from 'react';
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiDrawer from '@mui/material/Drawer';
+import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { mainListItems, secondaryListItems } from './listItems';
-import Chart from './Chart';
-import Deposits from './Deposits';
-import Orders from './Orders';
-import Copyright from './Copyright';
+import SearchBar from './SearchBar';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
+import { Sentiment } from '../Models/Sentiment';
+import '../css/Card.css';
+import '../css/Dashboard.css';
+import Results from './Results';
 
-const drawerWidth: number = 240;
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean;
+interface Props {}
+interface State {
+  searchTerm: string | null;
+  isLoading: boolean;
+  stockSentiment?: Sentiment;
 }
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
+class Dashboard extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = { searchTerm: null, isLoading: false };
+  }
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
-  '& .MuiDrawer-paper': {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-    boxSizing: 'border-box',
-    ...(!open && {
-      overflowX: 'hidden',
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      width: theme.spacing(7),
-      [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9),
-      },
-    }),
-  },
-}));
-
-const mdTheme = createTheme();
-
-function DashboardContent() {
-  // FIXME: learn react hooks
-  let [loading, setLoading] = React.useState(false);
-  let [color, setColor] = React.useState('#ffffff');
-  //
-
-  const [open, setOpen] = React.useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
+  getSearchTerm = (value: string | null) => {
+    this.setState({ searchTerm: value, isLoading: true });
   };
 
-  return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position='absolute' open={open}>
-          <Toolbar
-            sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
-            <IconButton
-              edge='start'
-              color='inherit'
-              aria-label='open drawer'
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    console.log('Props on SentimentDashboard:' + JSON.stringify(this.props));
+    console.log('State on SentimentDashboard:' + JSON.stringify(this.state));
+
+    if (prevState.searchTerm !== this.state.searchTerm) {
+      axios
+        .get(`/Sentiment`, {
+          params: {
+            stock: this.state.searchTerm,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          const searchResult: Sentiment = { ...response.data };
+          this.setState({ stockSentiment: searchResult });
+        })
+        .catch((error) => {
+          console.error(error);
+          // TODO: Error-handling with MUI Alert component
+          alert('fail: ' + JSON.stringify(error));
+          this.setState({ stockSentiment: undefined });
+        })
+        .finally(() => {
+          this.setState({ isLoading: false });
+        });
+    }
+  }
+
+  renderLoader() {}
+  renderHeader() {
+    return (
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position='sticky'>
+          <Toolbar>
+            <IconButton size='large' edge='start' color='inherit' aria-label='menu' sx={{ mr: 2 }}>
               <MenuIcon />
             </IconButton>
-            <Typography component='h1' variant='h4' color='inherit' noWrap sx={{ width: 300 }}>
+            <Typography variant='h4' component='div' sx={{ flexGrow: 1, mr: 2 }}>
               Stockal
             </Typography>
+            <SearchBar sendSearchTerm={this.getSearchTerm}></SearchBar>
+            <Button color='inherit'>Login</Button>
           </Toolbar>
         </AppBar>
-        <Drawer variant='permanent' open={open}>
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List>{mainListItems}</List>
-          <Divider />
-          <List>{secondaryListItems}</List>
-        </Drawer>
-        <Box
-          component='main'
-          sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
-            flexGrow: 1,
-            height: '100vh',
-            overflow: 'auto',
-          }}
-        >
-          <Toolbar />
-          <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* Chart */}
-              <Grid item xs={12} md={8} lg={9}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Chart />
-                </Paper>
-              </Grid>
-              {/* Recent Deposits */}
-              <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 240,
-                  }}
-                >
-                  <Deposits />
-                </Paper>
-              </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-            <Copyright sx={{ pt: 4 }} />
-          </Container>
-        </Box>
       </Box>
-    </ThemeProvider>
-  );
+    );
+  }
+
+  renderResults() {
+    return <Results searchTerm={this.state.searchTerm} stockSentiment={this.state.stockSentiment}></Results>;
+  }
+
+  render() {
+    return (
+      <div>
+        {/* Loader backdrop */}
+        <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={this.state.isLoading}>
+          <CircularProgress color='inherit' size={100} thickness={5} />
+        </Backdrop>
+        {/* //// */}
+
+        {this.renderHeader()}
+
+        {this.renderResults()}
+      </div>
+    );
+  }
 }
 
-export default function Dashboard() {
-  return <DashboardContent />;
-}
+export default Dashboard;
