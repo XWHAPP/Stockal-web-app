@@ -1,4 +1,5 @@
-This Typescript project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This Typescript project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), and hosted on AWS Amplify.
+View it live [here](https://production.d2ss9stobj79fe.amplifyapp.com/) !
 
 ## Key NPM modules making things happen
 1. React (UI/UX)
