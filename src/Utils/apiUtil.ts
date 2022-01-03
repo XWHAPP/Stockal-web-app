@@ -3,5 +3,4 @@ import { URL } from '../Enums';
 
 export const configureAxios = (isMock: boolean) => {
   axios.defaults.baseURL = isMock ? URL.MOCK : URL.ACTUAL;
-  // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 };
