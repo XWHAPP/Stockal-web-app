@@ -1,6 +1,6 @@
 export enum URL {
   MOCK = 'https://stockal.mocklab.io/',
-  ACTUAL = 'https://stockalsentimentanalysistest4-env.eba-ppz6bznz.ap-southeast-1.elasticbeanstalk.com',
+  ACTUAL = 'https://www.xwhappx-stockal.com',
 }
 
 export enum SENTIMENT {

@@ -1,20 +1,29 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { SentimentResults } from '../Models/SentimentResults';
 
-export const search = (stock: String) => {
-  let result: AxiosResponse;
-  axios
+export const getSentimentalResults = async (stock: String): Promise<SentimentResults> => {
+  // TODO: FUNCTIONIZE INTO GENERAL API / MIDDLEWARE
+  const searchResult = await axios
     .get(`/Sentiment`, {
       params: {
         stock: stock,
       },
     })
-    .then((response) => {
-      result = response;
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      // Transform data
+      const sentimentResults: SentimentResults = {
+        negativity: response.data.Negative_score,
+        neutrality: response.data.Neutral_score,
+        positivity: response.data.Positive_score,
+      };
+      ////
+      return sentimentResults;
     })
-    .catch(function (error) {
-      // TODO: tear down loading screen, and pass error to Dashboard to display error with
-      console.error(error);
+    .catch((error: AxiosError) => {
+      console.log(error);
+      return Promise.reject(error);
     });
-  // FIXME: make this function work!
-  //   return result;
+
+  return Promise.resolve(searchResult);
 };
