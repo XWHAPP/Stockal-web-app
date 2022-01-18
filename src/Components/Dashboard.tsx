@@ -9,11 +9,11 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchBar from './SearchBar';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-import axios from 'axios';
 import { SentimentResults } from '../Models/SentimentResults';
 import '../css/Card.css';
 import '../css/Dashboard.css';
 import Results from './Results';
+import { getSentimentalResults } from '../Apis/SearchApi';
 
 interface Props {}
 interface State {
@@ -36,32 +36,16 @@ class Dashboard extends React.Component<Props, State> {
     console.log('Props on SentimentDashboard:' + JSON.stringify(this.props));
     console.log('State on SentimentDashboard:' + JSON.stringify(this.state));
 
-    if (prevState.searchTerm !== this.state.searchTerm) {
-      axios
-        .get(`/Sentiment`, {
-          params: {
-            stock: this.state.searchTerm,
-          },
+    if (prevState.searchTerm !== this.state.searchTerm && this.state.searchTerm) {
+      getSentimentalResults(this.state.searchTerm)
+        .then((searchResult) => {
+          this.setState({ stockSentiment: searchResult, isLoading: false });
         })
-        .then((response) => {
-          console.log(response);
-          // Transform data
-          const searchResult: SentimentResults = {
-            negativity: response.data.Negative_score,
-            neutrality: response.data.Neutral_score,
-            positivity: response.data.Positive_score,
-          };
-          ////
-          this.setState({ stockSentiment: searchResult });
-        })
-        .catch((error) => {
-          console.error(error);
+        .catch((promiseError) => {
+          console.error(promiseError);
           // TODO: Error-handling with MUI Alert component
-          alert('fail: ' + JSON.stringify(error));
-          this.setState({ stockSentiment: undefined });
-        })
-        .finally(() => {
-          this.setState({ isLoading: false });
+          alert(promiseError);
+          this.setState({ stockSentiment: undefined, isLoading: false });
         });
     }
   }
