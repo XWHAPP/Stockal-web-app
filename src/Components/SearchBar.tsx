@@ -42,7 +42,11 @@ class SearchBar extends React.Component<Props, State> {
 const autoCompleteOptions = [
   { title: 'BTC', year: 1994 }, // Largely negative stock
   { title: 'ETH', year: 1972 }, // Largely neutral stock
-  { title: 'SPY', year: 1974 }, // Largely positive stock
+  { title: 'SPY', year: 1974 }, // Largely positive stock / actual stock
+  { title: 'TSLA', year: 2018 }, // 404 not found / actual stock
+  { title: 'VOO', year: 2018 }, // 404 not found / actual stock
+  { title: 'AMD', year: 2018 }, // 404 not found / actual stock
+  { title: 'NVDA', year: 2018 }, // 404 not found / actual stock
   { title: 'MATIC', year: 2008 }, // 404 not found
 ];
 
