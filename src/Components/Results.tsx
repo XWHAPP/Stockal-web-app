@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
 import * as React from 'react';
 import { VictoryLabel, VictoryPie } from 'victory';
-import { Sentiment } from '../Models/Sentiment';
+import { SentimentResults } from '../Models/SentimentResults';
 import Card from './Card';
 
 interface Props {
-  stockSentiment: Sentiment | undefined;
+  stockSentiment: SentimentResults | undefined;
   searchTerm: string | null;
 }
 

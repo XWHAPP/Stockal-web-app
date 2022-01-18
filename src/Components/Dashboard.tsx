@@ -10,7 +10,7 @@ import SearchBar from './SearchBar';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
-import { Sentiment } from '../Models/Sentiment';
+import { SentimentResults } from '../Models/SentimentResults';
 import '../css/Card.css';
 import '../css/Dashboard.css';
 import Results from './Results';
@@ -19,7 +19,7 @@ interface Props {}
 interface State {
   searchTerm: string | null;
   isLoading: boolean;
-  stockSentiment?: Sentiment;
+  stockSentiment?: SentimentResults;
 }
 
 class Dashboard extends React.Component<Props, State> {
@@ -45,7 +45,13 @@ class Dashboard extends React.Component<Props, State> {
         })
         .then((response) => {
           console.log(response);
-          const searchResult: Sentiment = { ...response.data };
+          // Transform data
+          const searchResult: SentimentResults = {
+            negativity: response.data.Negative_score,
+            neutrality: response.data.Neutral_score,
+            positivity: response.data.Positive_score,
+          };
+          ////
           this.setState({ stockSentiment: searchResult });
         })
         .catch((error) => {
