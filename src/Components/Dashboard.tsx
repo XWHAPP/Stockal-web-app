@@ -44,13 +44,11 @@ class Dashboard extends React.Component<Props, State> {
         .catch((promiseError) => {
           console.error(promiseError);
           // TODO: Error-handling with MUI Alert component
-          alert(promiseError);
           this.setState({ stockSentiment: undefined, isLoading: false });
         });
     }
   }
 
-  renderLoader() {}
   renderHeader() {
     return (
       <Box sx={{ flexGrow: 1 }}>
