@@ -14,21 +14,24 @@ import '../css/Card.css';
 import '../css/Dashboard.css';
 import Results from './Results';
 import { getSentimentalResults } from '../Apis/SearchApi';
+import { Alert, Snackbar } from '@mui/material';
 
 interface Props {}
 interface State {
-  searchTerm: string | null;
+  searchTerm?: string;
   isLoading: boolean;
   stockSentiment?: SentimentResults;
+  errorMessage?: string;
+  showSnackBar: boolean;
 }
 
 class Dashboard extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { searchTerm: null, isLoading: false };
+    this.state = { isLoading: false, showSnackBar: false };
   }
 
-  getSearchTerm = (value: string | null) => {
+  getSearchTerm = (value: string) => {
     this.setState({ searchTerm: value, isLoading: true });
   };
 
@@ -41,10 +44,8 @@ class Dashboard extends React.Component<Props, State> {
         .then((searchResult) => {
           this.setState({ stockSentiment: searchResult, isLoading: false });
         })
-        .catch((promiseError) => {
-          console.error(promiseError);
-          // TODO: Error-handling with MUI Alert component
-          this.setState({ stockSentiment: undefined, isLoading: false });
+        .catch((error) => {
+          this.setState({ stockSentiment: undefined, isLoading: false, showSnackBar: true, errorMessage: error });
         });
     }
   }
@@ -72,6 +73,28 @@ class Dashboard extends React.Component<Props, State> {
     return <Results searchTerm={this.state.searchTerm} stockSentiment={this.state.stockSentiment}></Results>;
   }
 
+  // TODO: Componentize snackbar
+  renderSnackBar() {
+    return (
+      <Snackbar
+        open={this.state.showSnackBar}
+        onClose={(event, reason) => {
+          if (reason === 'clickaway') {
+            return;
+          }
+
+          this.setState({ showSnackBar: false, errorMessage: undefined });
+        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        autoHideDuration={5000}
+      >
+        <Alert severity='error' sx={{ width: '100%' }}>
+          {this.state.errorMessage ? this.state.errorMessage : 'Unexpected error encountered, please try again!'}
+        </Alert>
+      </Snackbar>
+    );
+  }
+
   render() {
     return (
       <div>
@@ -84,6 +107,8 @@ class Dashboard extends React.Component<Props, State> {
         {this.renderHeader()}
 
         {this.renderResults()}
+
+        {this.state.showSnackBar && this.renderSnackBar()}
       </div>
     );
   }

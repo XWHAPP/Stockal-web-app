@@ -11,9 +11,6 @@ export const get = (url: string, parameters: any) => {
     })
     .catch((error: AxiosError) => {
       console.error(error.toJSON());
-      alert(error.response?.status);
-      alert(error.response?.statusText);
-      // TODO: REFINE ERROR HANDLING
       throw error;
     });
 };
