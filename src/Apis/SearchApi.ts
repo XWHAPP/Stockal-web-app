@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios';
 import { SentimentResults } from '../Models/SentimentResults';
-import { get } from './Api';
+import { get } from './api';
 
 export const getSentimentalResults = async (stock: String): Promise<SentimentResults> => {
   return await get(`/Sentiment`, { stock: stock })
