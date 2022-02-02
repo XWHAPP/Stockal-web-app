@@ -15,6 +15,7 @@ import '../css/Dashboard.css';
 import Results from './Results';
 import { getSentimentalResults } from '../Apis/SearchApi';
 import { Alert, Snackbar } from '@mui/material';
+import { nasdaq } from '../data/nasdaq';
 
 interface Props {}
 interface State {
@@ -61,7 +62,7 @@ class Dashboard extends React.Component<Props, State> {
             <Typography variant='h4' component='div' sx={{ flexGrow: 1, mr: 2 }}>
               Stockal
             </Typography>
-            <SearchBar sendSearchTerm={this.getSearchTerm}></SearchBar>
+            <SearchBar sendSearchTerm={this.getSearchTerm} autocompleteOptions={nasdaq}></SearchBar>
             <Button color='inherit'>Login</Button>
           </Toolbar>
         </AppBar>
