@@ -14,21 +14,25 @@ import '../css/Card.css';
 import '../css/Dashboard.css';
 import Results from './Results';
 import { getSentimentalResults } from '../Apis/SearchApi';
+import { Alert, Snackbar } from '@mui/material';
+import { nasdaq } from '../data/nasdaq';
 
 interface Props {}
 interface State {
-  searchTerm: string | null;
+  searchTerm?: string;
   isLoading: boolean;
   stockSentiment?: SentimentResults;
+  errorMessage?: string;
+  showSnackBar: boolean;
 }
 
 class Dashboard extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { searchTerm: null, isLoading: false };
+    this.state = { isLoading: false, showSnackBar: false };
   }
 
-  getSearchTerm = (value: string | null) => {
+  getSearchTerm = (value: string) => {
     this.setState({ searchTerm: value, isLoading: true });
   };
 
@@ -41,16 +45,12 @@ class Dashboard extends React.Component<Props, State> {
         .then((searchResult) => {
           this.setState({ stockSentiment: searchResult, isLoading: false });
         })
-        .catch((promiseError) => {
-          console.error(promiseError);
-          // TODO: Error-handling with MUI Alert component
-          alert(promiseError);
-          this.setState({ stockSentiment: undefined, isLoading: false });
+        .catch((error) => {
+          this.setState({ stockSentiment: undefined, isLoading: false, showSnackBar: true, errorMessage: error });
         });
     }
   }
 
-  renderLoader() {}
   renderHeader() {
     return (
       <Box sx={{ flexGrow: 1 }}>
@@ -62,7 +62,7 @@ class Dashboard extends React.Component<Props, State> {
             <Typography variant='h4' component='div' sx={{ flexGrow: 1, mr: 2 }}>
               Stockal
             </Typography>
-            <SearchBar sendSearchTerm={this.getSearchTerm}></SearchBar>
+            <SearchBar sendSearchTerm={this.getSearchTerm} autocompleteOptions={nasdaq}></SearchBar>
             <Button color='inherit'>Login</Button>
           </Toolbar>
         </AppBar>
@@ -72,6 +72,28 @@ class Dashboard extends React.Component<Props, State> {
 
   renderResults() {
     return <Results searchTerm={this.state.searchTerm} stockSentiment={this.state.stockSentiment}></Results>;
+  }
+
+  // TODO: Componentize snackbar
+  renderSnackBar() {
+    return (
+      <Snackbar
+        open={this.state.showSnackBar}
+        onClose={(event, reason) => {
+          if (reason === 'clickaway') {
+            return;
+          }
+
+          this.setState({ showSnackBar: false, errorMessage: undefined });
+        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        autoHideDuration={5000}
+      >
+        <Alert severity='error' sx={{ width: '100%' }}>
+          {this.state.errorMessage ? this.state.errorMessage : 'Unexpected error encountered, please try again!'}
+        </Alert>
+      </Snackbar>
+    );
   }
 
   render() {
@@ -86,6 +108,8 @@ class Dashboard extends React.Component<Props, State> {
         {this.renderHeader()}
 
         {this.renderResults()}
+
+        {this.state.showSnackBar && this.renderSnackBar()}
       </div>
     );
   }
