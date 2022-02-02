@@ -1,9 +1,12 @@
 import * as React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import { StockSearchOptions } from '../Models/StockSearchOptions';
+import { Box, createFilterOptions } from '@mui/material';
 
 interface Props {
   sendSearchTerm(value: string | null): void;
+  autocompleteOptions: Array<StockSearchOptions>;
 }
 
 interface State {}
@@ -13,9 +16,11 @@ class SearchBar extends React.Component<Props, State> {
     this.setState({ open: isOpen });
   };
 
-  onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: string | null) => {
-    console.log('Searched term = ' + value);
-    this.props.sendSearchTerm(value);
+  onAutocompleteChange = (event: React.SyntheticEvent<Element, Event>, value: any | null) => {
+    console.log('Searched term = ' + value?.symbol);
+    if (value) {
+      this.props.sendSearchTerm(value?.symbol);
+    }
   };
 
   render() {
@@ -26,9 +31,16 @@ class SearchBar extends React.Component<Props, State> {
         fullWidth
         autoHighlight
         size='small'
-        options={autoCompleteOptions.map((option) => option.title)}
+        options={this.props.autocompleteOptions}
+        getOptionLabel={(option) => option.symbol}
         renderInput={(params) => <TextField {...params} label='Search stocks' />}
         onChange={this.onAutocompleteChange}
+        renderOption={(props, option) => (
+          <Box component='li' sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+            {option.symbol} ({option.name})
+          </Box>
+        )}
+        filterOptions={createFilterOptions({ limit: 10 })}
         sx={{ mr: 2 }}
         selectOnFocus={true}
         blurOnSelect={true}
@@ -37,17 +49,5 @@ class SearchBar extends React.Component<Props, State> {
     );
   }
 }
-
-// TODO: True autocomplete data retrieval. See Github issue 1
-const autoCompleteOptions = [
-  { title: 'BTC', year: 1994 }, // Largely negative stock
-  { title: 'ETH', year: 1972 }, // Largely neutral stock
-  { title: 'SPY', year: 1974 }, // Largely positive stock / actual stock
-  { title: 'TSLA', year: 2018 }, // 404 not found / actual stock
-  { title: 'VOO', year: 2018 }, // 404 not found / actual stock
-  { title: 'AMD', year: 2018 }, // 404 not found / actual stock
-  { title: 'NVDA', year: 2018 }, // 404 not found / actual stock
-  { title: 'MATIC', year: 2008 }, // 404 not found
-];
 
 export default SearchBar;

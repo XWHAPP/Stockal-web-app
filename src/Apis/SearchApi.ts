@@ -1,17 +1,12 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { SentimentResults } from '../Models/SentimentResults';
+import { get } from './Api';
 
 export const getSentimentalResults = async (stock: String): Promise<SentimentResults> => {
-  // TODO: FUNCTIONIZE INTO GENERAL API / MIDDLEWARE
-  const searchResult = await axios
-    .get(`/Sentiment`, {
-      params: {
-        stock: stock,
-      },
-    })
+  return await get(`/Sentiment`, { stock: stock })
     .then((response: AxiosResponse) => {
       console.log(response);
-      // Transform data
+      // Transform
       const sentimentResults: SentimentResults = {
         negativity: response.data.Negative_score,
         neutrality: response.data.Neutral_score,
@@ -21,9 +16,12 @@ export const getSentimentalResults = async (stock: String): Promise<SentimentRes
       return sentimentResults;
     })
     .catch((error: AxiosError) => {
-      console.log(error);
-      return Promise.reject(error);
-    });
+      switch (error.response?.status) {
+        case 404:
+          return Promise.reject('Stock not found. Please check again!');
 
-  return Promise.resolve(searchResult);
+        default:
+          return Promise.reject('Unexpected error occurred. Please try again!');
+      }
+    });
 };

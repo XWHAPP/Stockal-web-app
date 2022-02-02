@@ -5,8 +5,8 @@ import { SentimentResults } from '../Models/SentimentResults';
 import Card from './Card';
 
 interface Props {
-  stockSentiment: SentimentResults | undefined;
-  searchTerm: string | null;
+  stockSentiment?: SentimentResults;
+  searchTerm?: string;
 }
 
 interface State {}

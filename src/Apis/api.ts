@@ -1,20 +1,88 @@
-import axios from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 
-// REVIEW: implement "middleware" to handle errors? This depends on how we handle state management
-export const get = (url: string, params: any) => {
-  let result: any;
-
-  axios.get(url, params).then((response) => {
-    console.log(response);
-    result = response;
-  });
-  return result;
+export const get = (url: string, parameters: any) => {
+  return axios
+    .get(url, {
+      params: parameters,
+    })
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error: AxiosError) => {
+      console.error(error.toJSON());
+      throw error;
+    });
 };
 
-export const post = (url: string, body: any, ifSuccess: () => {}) => {};
+export const post = (url: string, parameters: any) => {
+  return axios
+    .get(url, {
+      params: parameters,
+    })
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error: AxiosError) => {
+      console.error(error.toJSON());
+      alert(error.response?.status);
+      alert(error.response?.statusText);
+      // TODO: REFINE ERROR HANDLING
+      throw error;
+    });
+};
 
-export const patch = (url: string, body: any, ifSuccess: () => {}) => {};
+export const patch = (url: string, parameters: any) => {
+  return axios
+    .get(url, {
+      params: parameters,
+    })
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error: AxiosError) => {
+      console.error(error.toJSON());
+      alert(error.response?.status);
+      alert(error.response?.statusText);
+      // TODO: REFINE ERROR HANDLING
+      throw error;
+    });
+};
 
-export const put = (url: string, body: any, ifSuccess: () => {}) => {};
+export const put = (url: string, parameters: any) => {
+  return axios
+    .get(url, {
+      params: parameters,
+    })
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error: AxiosError) => {
+      console.error(error.toJSON());
+      alert(error.response?.status);
+      alert(error.response?.statusText);
+      // TODO: REFINE ERROR HANDLING
+      throw error;
+    });
+};
 
-export const del = (url: string, params: any, ifSuccess: () => {}) => {};
+export const del = (url: string, parameters: any) => {
+  return axios
+    .get(url, {
+      params: parameters,
+    })
+    .then((response: AxiosResponse) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error: AxiosError) => {
+      console.error(error.toJSON());
+      alert(error.response?.status);
+      alert(error.response?.statusText);
+      // TODO: REFINE ERROR HANDLING
+      throw error;
+    });
+};
